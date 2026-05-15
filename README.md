@@ -9,6 +9,7 @@ Hardened by [Chainguard](https://www.chainguard.dev) from the upstream action at
 | Version | Tag | Upstream commit |
 |---------|-----|-----------------|
 | v5.0.2 | [`v5.0.2`](https://github.com/chainguard-actions/k8s-deploy/tree/v5.0.2) | — |
+| v5.0.3 | [`v5.0.3`](https://github.com/chainguard-actions/k8s-deploy/tree/v5.0.3) | — |
 | v5.0.4 | [`v5.0.4`](https://github.com/chainguard-actions/k8s-deploy/tree/v5.0.4) | — |
 | v5.1.0 | [`v5.1.0`](https://github.com/chainguard-actions/k8s-deploy/tree/v5.1.0) | — |
 | v6.0.0 | [`v6.0.0`](https://github.com/chainguard-actions/k8s-deploy/tree/v6.0.0) | — |
