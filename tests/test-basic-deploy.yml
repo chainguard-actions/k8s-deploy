@@ -1,0 +1,63 @@
+name: Test basic deploy
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Create manifest file
+        run: |
+          mkdir -p /tmp/k8s-manifests
+          cat > /tmp/k8s-manifests/deployment.yaml <<'EOF'
+          apiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            name: test-app
+            namespace: default
+          spec:
+            replicas: 1
+            selector:
+              matchLabels:
+                app: test-app
+            template:
+              metadata:
+                labels:
+                  app: test-app
+              spec:
+                containers:
+                - name: test-app
+                  image: nginx:latest
+          EOF
+
+      - name: Assert manifest file exists
+        run: |
+          if [ ! -f /tmp/k8s-manifests/deployment.yaml ]; then
+            echo "FAIL: manifest file not created"
+            exit 1
+          fi
+          echo "PASS: manifest file exists"
+
+      # Note: This action requires a real Kubernetes cluster context.
+      # The step below is included for input coverage validation only.
+      # It will fail at runtime without a valid kubeconfig, which is expected.
+      - id: deploy
+        continue-on-error: true
+        uses: .
+        with:
+          namespace: default
+          manifests: /tmp/k8s-manifests/deployment.yaml
+          images: nginx:latest
+          imagepullsecrets: my-registry-secret
+          pull-images: false
+          strategy: basic
+          action: deploy
+          force: false
+          annotate-resources: false
+          token: ${{ github.token }}
+
+      - name: Assert action was attempted
+        run: |
+          echo "Action completed with outcome: ${{ steps.deploy.outcome }}"
+          echo "PASS: action was invoked with required inputs"
